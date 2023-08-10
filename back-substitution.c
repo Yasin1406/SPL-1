@@ -16,6 +16,10 @@ int main(){
     
     for(i=0;i<n-1;i++){
         cur=matA[i][i];
+        if(cur==0){
+            printf("Pivot is zero.\n");
+            return 0;
+        }
         for(j=i+1;j<n;j++){
             pre=matA[j][i];
             for(k=0;k<n;k++){
@@ -23,8 +27,21 @@ int main(){
             }
             matB[j]=(pre*matB[i])-(cur*matB[j]);
         }
+        if(matA[j][j]==0){
+            printf("Pivot is zero.\n");
+            return 0;
+        }
     }
 
+
+
+    for(i=0;i<n;i++){
+        cur=matA[i][i];
+        for(j=0;j<n;j++){
+            matA[i][j]/=cur;
+        }
+        matB[i]/=cur;
+    }
 
     for(i=0;i<n;i++){
         printf("|");
@@ -35,16 +52,15 @@ int main(){
     }
 
     for(i=n-1;i>=0;i--){
-        sum=0;
+        matX[i]=matB[i];
         for(j=i+1;j<n;j++){
-            sum+=matA[i][j]*matX[j];
+            matX[i]-=matX[j]*matA[i][j];
         }
-        sum=matB[i]-sum;
-        matX[i]=sum/matA[i][i];
-    }
-    printf("\nResult:\n");
+    }  
+
     for(i=0;i<n;i++){
         printf("X%d: %.2lf\n",i+1,matX[i]);
-    }
+    }  
+
     return 0;
 }
