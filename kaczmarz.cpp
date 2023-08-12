@@ -33,7 +33,7 @@ int main(){
     }
     
     for(i=0;i<n;i++){
-        vec[0][i]=0.001;
+        vec[0][i]=0.0;
     }
     
     // for(i=1;i<=20;i++){
@@ -56,6 +56,7 @@ double row_sq_sum(int index){
 bool kaczmarz(int k){
     int i,j;
     int index=k%m;
+  //  int index=rand()%m;
     double in_prod=dot_multiplication(index,k-1);
     double mul=(b[index]-in_prod)/row_sq_sum(index);
     double ess;

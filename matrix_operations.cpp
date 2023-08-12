@@ -1,15 +1,18 @@
 #include<bits/stdc++.h>
 using namespace std;
-#define EPS 1e-4
+#define EPS 10e-4
 void addition(vector<vector<double>> &mat1,vector<vector<double>> &mat2,vector<vector<double>> &mat3);
 void subtraction(vector<vector<double>> &mat1,vector<vector<double>> &mat2,vector<vector<double>> &mat3);
 void transpose(vector<vector<double>> &mat1,vector<vector<double>> &mat2);
 void multiplication(vector<vector<double>> &mat1,vector<vector<double>> &mat2,vector<vector<double>> &mat3);
 double determinant(vector<vector<double>> &mat);
-double max_value(vector<vector<double>> &mat1,vector<int> &index);
+double max_off_diagonal_value(vector<vector<double>> &mat1,int &inI,int &inJ);
 bool is_diagonal(vector<vector<double>> &mat1);
+double off_diagonal_sq_sum(vector<vector<double>> mat);
+void make_identical(vector<vector<double>> &mat,int size);
+void matrix_copy(vector<vector<double>> mat1,vector<vector<double>> &mat2);
 // int main(){
-//     int m1,m2,n1,n2;
+//     int m1,m2,n1,n2,inI,inJ;
 //     vector<vector<double>> mat1,mat2,mat3;
 //     cout<<"Enter the dimension of the 1st matrix: ";
 //     cin>>m1>>n1;
@@ -27,7 +30,25 @@ bool is_diagonal(vector<vector<double>> &mat1);
 //             cin>>mat1[i][j];
 //         }
 //     }
+//     vector<vector<double>> mat_cpy,iden;
+//     matrix_copy(mat1,mat_cpy);
+//     cout<<"After copying:"<<endl;
+//     for(i=0;i<mat_cpy.size();i++){
+//         for(j=0;j<mat_cpy[i].size();j++){
+//             cout<<mat_cpy[i][j]<<" ";
+//         }
+//         cout<<endl;
+//     }
+//     make_identical(iden,3);
 
+//     cout<<endl;
+//     cout<<"Identical:"<<endl;
+//     for(i=0;i<iden.size();i++){
+//         for(j=0;j<iden[i].size();j++){
+//             cout<<iden[i][j]<<" ";
+//         }
+//         cout<<endl;
+//     }
 //     vector<int> maxIn;
 // //     transpose(mat1,mat2);
 // //     multiplication(mat1,mat2,mat3);
@@ -57,13 +78,16 @@ bool is_diagonal(vector<vector<double>> &mat1);
 // //         cout<<endl;
 // //     }
 // //    cout<<determinant(mat1)<<endl;
-//     if(is_diagonal(mat1)){
-//         cout<<"Yes"<<endl;
-//     }
-//     else{
-//         cout<<"No"<<endl;
-//    }
-//    //cout<<max_value(mat1,maxIn)<<endl;
+// //     if(is_diagonal(mat1)){
+// //         cout<<"Yes"<<endl;
+// //     }
+// //     else{
+// //         cout<<"No"<<endl;
+// //    }
+
+//    cout<<max_off_diagonal_value(mat1,inI,inJ)<<endl;
+//    cout<<inI<<" "<<inJ<<endl;
+//    cout<<off_diagonal_sq_sum(mat_cpy)<<endl;
 //    return 0;
 
 // }
@@ -111,12 +135,6 @@ void multiplication(vector<vector<double>> &mat1,vector<vector<double>> &mat2,ve
             if(fabs(mat3[i][j])<EPS){
                 mat3[i][j]=0;
             }
-            if(fabs(floor(mat3[i][j])-mat3[i][j])<EPS){
-                mat3[i][j]=floor(mat3[i][j]);
-            }
-            if(fabs(ceil(mat3[i][j])-mat3[i][j])<EPS){
-                mat3[i][j]=ceil(mat3[i][j]);
-            }
         }
     }
 }
@@ -152,17 +170,18 @@ double determinant(vector<vector<double>> &mat){
     return det;
 }
 
-double max_value(vector<vector<double>> &mat1,vector<int> &index){
+double max_off_diagonal_value(vector<vector<double>> &mat1,int &inI,int &inJ){
     int i,j;
-    index.resize(2);
-    double max=mat1[0][1];
+    double max=fabs(mat1[0][1]);
+    inI=0;
+    inJ=1;
         for(i=0;i<mat1.size();i++){
             for(j=0;j<mat1[i].size();j++){ 
-                if(i!=j&&mat1[i][j]>max){
+                if(i!=j&&fabs(mat1[i][j])>max){
                     max=mat1[i][j];
                 //    cout<<i<<j<<endl;
-                    index[0]=i;
-                    index[1]=j;
+                    inI=i;
+                    inJ=j;
                 }
             }
     }
@@ -181,4 +200,42 @@ bool is_diagonal(vector<vector<double>> &mat1){
         }
     }
     return true;
+}
+
+double off_diagonal_sq_sum(vector<vector<double>> mat){
+    double sq;
+    int i,j;
+    for(i=0;i<mat.size();i++){
+        for(j=0;j<mat[i].size();j++){
+            if(i!=j){
+                sq+=pow(mat[i][j],2);
+            }
+        }
+    }
+    return sq;
+}
+
+void make_identical(vector<vector<double>> &mat,int size){
+    mat.resize(size,vector<double>(size));
+    int i,j;
+    for(i=0;i<size;i++){
+        for(j=0;j<size;j++){
+            if(i!=j){
+                mat[i][j]=0;
+            }
+            else{
+                mat[i][j]=1;
+            }
+        }
+    }
+}
+
+void matrix_copy(vector<vector<double>> mat1,vector<vector<double>> &mat2){
+    mat2.resize(mat1.size(),vector<double>(mat1[0].size()));
+    int i,j;
+    for(i=0;i<mat1.size();i++){
+        for(j=0;j<mat1[i].size();j++){
+            mat2[i][j]=mat1[i][j];
+        }
+    }
 }
