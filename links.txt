@@ -1,0 +1,9 @@
+Eigenvalues and Eigenvectors:
+https://youtu.be/1wjXVdwzgX8
+https://youtu.be/GICp5jmoIg0
+
+Kaczmarz Mehtod:
+https://youtu.be/SclGSdwB7M4
+
+Jacobi Method for Eigenvalues:
+https://youtu.be/6R1kVlIrtZE
