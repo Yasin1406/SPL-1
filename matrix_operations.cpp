@@ -172,12 +172,12 @@ double determinant(vector<vector<double>> &mat){
 
 double max_off_diagonal_value(vector<vector<double>> &mat1,int &inI,int &inJ){
     int i,j;
-    double max=fabs(mat1[0][1]);
+    double max=0;
     inI=0;
     inJ=1;
         for(i=0;i<mat1.size();i++){
             for(j=0;j<mat1[i].size();j++){ 
-                if(i!=j&&fabs(mat1[i][j])>max){
+                if(i!=j&&fabs(mat1[i][j])>fabs(max)){
                     max=mat1[i][j];
                 //    cout<<i<<j<<endl;
                     inI=i;

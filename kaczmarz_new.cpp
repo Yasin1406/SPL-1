@@ -28,7 +28,7 @@ int main(){
         temp.push_back(0);
     }
     x.push_back(temp);
-    for(i=1;i<=1000;i++){
+    for(i=1;i<=2000;i++){
         kaczmarz(i);
         cout<<"Iter: "<<i<<endl;
         for(j=0;j<n;j++){
@@ -53,7 +53,7 @@ double norm_sq(int row){
     return sq_sum;
 }
 void kaczmarz(int k){
-    int index=k%m;
+    int index=(k-1)%m;
     double coefficient=(b[index]-inner_product(index,k-1))/norm_sq(index);
     vector<double> temp;
     int i;
