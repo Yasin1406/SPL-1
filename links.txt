@@ -8,3 +8,6 @@ https://youtu.be/SclGSdwB7M4
 
 Jacobi Method for Eigenvalues:
 https://youtu.be/6R1kVlIrtZE
+
+Inverse of a Matrix:
+https://www.youtube.com/watch?v=rnyLW2-lL7o

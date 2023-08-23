@@ -1,6 +1,6 @@
 #include<bits/stdc++.h>
 using namespace std;
-#define upper 20
+#define upper 10
 #define lower 0
 //#define EPS 1e-3
 #include "matrix_operations.cpp"

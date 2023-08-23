@@ -1,6 +1,6 @@
 #include<bits/stdc++.h>
 using namespace std;
-#define EPS 10e-4
+#define EPS 10e-6
 void addition(vector<vector<double>> &mat1,vector<vector<double>> &mat2,vector<vector<double>> &mat3);
 void subtraction(vector<vector<double>> &mat1,vector<vector<double>> &mat2,vector<vector<double>> &mat3);
 void transpose(vector<vector<double>> &mat1,vector<vector<double>> &mat2);
@@ -260,52 +260,74 @@ void sub_matrix(vector<vector<double>> mat,int I,int J,vector<vector<double>> &s
     }
 }
 void inverse_matrix(vector<vector<double>> mat,vector<vector<double>> &in_mat){
-    if(fabs(determinant(mat))<EPS){
-        cout<<"The matrix is not invertible"<<endl;
-        return;
-    }
-    int i,j,k,n=mat.size(),cur,pre;
+    int i,j,k,n=mat.size(),cur,pre,p;
+    double m;
     make_identical(in_mat,n);
     for(i=0;i<n-1;i++){
-        cur=mat[i][i];
-        for(j=i+1;j<n;j++){
-            pre=mat[j][i];
-            for(k=0;k<n;k++){
-                mat[j][k]=-(pre*mat[i][k])+(cur*mat[j][k]);
-                in_mat[j][k]=-(pre*in_mat[i][k])+(cur*in_mat[j][k]);
-                
+        for(p=i;p<n;p++){
+            if(!(fabs(mat[p][i])<EPS)){
+                break;
             }
-            for(k=0;k<n;k++){
-                mat[j][k]/=cur;
-                in_mat[j][k]/=cur;
-            }
-            
         }
-        print_aug_matrix(mat,in_mat);
+        if(p==n){
+            cout<<"Solution doessn't exist!"<<endl;
+            return;
+        }
+        if(fabs(mat[i][i])<EPS){
+            vector<double> temp,in_temp;
+            temp.resize(n);
+            in_temp.resize(n);
+            for(j=0;j<n;j++){
+                temp[j]=mat[i][j];
+                in_temp[j]=in_mat[i][j];
+            }
+            for(j=0;j<n;j++){
+                in_mat[i][j]=in_mat[p][j];
+            }
+            for(j=0;j<n;j++){
+                in_mat[p][j]=in_temp[j];
+            }
+        }
+        for(j=i+1;j<n;j++){
+            m=mat[j][i]/mat[i][i];
+            for(k=0;k<n;k++){
+                mat[j][k]-=m*mat[i][k];
+                if(fabs(mat[j][k])<EPS){
+                    mat[j][k]=0;
+                }
+                in_mat[j][k]-=m*in_mat[i][k];
+                if(fabs(in_mat[j][k])<EPS){
+                    in_mat[j][k]=0;
+                }
+            }
+        }
+    }
+    if(fabs(mat[n-1][n-1])<EPS){
+        cout<<"Solution doesn't exist"<<endl;
+        return;
     }
     for(i=n-1;i>0;i--){
-        cur=mat[i][i];
         for(j=i-1;j>=0;j--){
-            pre=mat[j][i];
+            m=mat[j][i]/mat[i][i];
             for(k=0;k<n;k++){
-                mat[j][k]=-(pre*mat[i][k])+(cur*mat[j][k]);
-                in_mat[j][k]=-(pre*in_mat[i][k])+(cur*in_mat[j][k]);
-                
-            }
-            for(k=0;k<n;k++){
-                mat[j][k]/=cur;
-                in_mat[j][k]/=cur;
+                mat[j][k]-=m*mat[i][k];
+                if(fabs(mat[j][k])<EPS){
+                    mat[j][k]=0;
+                }
+                in_mat[j][k]-=m*in_mat[i][k];
+                if(fabs(in_mat[j][k])<EPS){
+                    in_mat[j][k]=0;
+                }
             }
         }
-        print_aug_matrix(mat,in_mat);
     }
-    // for(i=0;i<n;i++){
-    //     cur=mat[i][i];
-    //     for(j=0;j<n;j++){
-    //         mat[i][j]/=cur;
-    //         in_mat[i][j]/=cur;
-    //     }
-    // }
+    for(i=0;i<n;i++){
+        m=mat[i][i];
+        for(j=0;j<n;j++){
+            mat[j][i]/=m;
+            in_mat[i][j]/=m;
+        }
+    }
 }
 void print_matrix(vector<vector<double>> mat){
     for(int i=0;i<mat.size();i++){
@@ -319,11 +341,11 @@ void print_aug_matrix(vector<vector<double>> mat,vector<vector<double>> aug_mat)
     int i,j;
     for(i=0;i<mat.size();i++){
         for(j=0;j<mat[i].size();j++){
-            cout<<mat[i][j]<<"\t";
+            printf("%.3lf\t",mat[i][j]);
         }
-        cout<<"|\t";
+        cout<<"| ";
         for(j=0;j<aug_mat[i].size();j++){
-            cout<<aug_mat[i][j]<<"\t";
+            printf("%.3lf\t",aug_mat[i][j]);
         }
         cout<<endl;
     }
