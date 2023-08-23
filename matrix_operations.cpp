@@ -11,6 +11,10 @@ bool is_diagonal(vector<vector<double>> &mat1);
 double off_diagonal_sq_sum(vector<vector<double>> mat);
 void make_identical(vector<vector<double>> &mat,int size);
 void matrix_copy(vector<vector<double>> mat1,vector<vector<double>> &mat2);
+void sub_matrix(vector<vector<double>> mat,int I,int J,vector<vector<double>> &sub_mat);
+void inverse_matrix(vector<vector<double>> mat,vector<vector<double>> &in_mat);
+void print_matrix(vector<vector<double>> mat);
+void print_aug_matrix(vector<vector<double>> mat,vector<vector<double>> aug_mat);
 // int main(){
 //     int m1,m2,n1,n2,inI,inJ;
 //     vector<vector<double>> mat1,mat2,mat3;
@@ -153,18 +157,19 @@ double determinant(vector<vector<double>> &mat){
     double det=0;
     for(i=0;i<n;i++){
         vector<vector<double>> sub_mat;
-        sub_mat.resize(n-1,vector<double>(n-1));
-        int sub_row=0,sub_col;
-        for(j=1;j<n;j++){
-            sub_col=0;
-            for(k=0;k<n;k++){
-                if(k!=i){
-                    sub_mat[sub_row][sub_col]=mat[j][k];
-                    sub_col++;
-                }
-            }
-            sub_row++;
-        }
+        // sub_mat.resize(n-1,vector<double>(n-1));
+        // int sub_row=0,sub_col;
+        // for(j=1;j<n;j++){
+        //     sub_col=0;
+        //     for(k=0;k<n;k++){
+        //         if(k!=i){
+        //             sub_mat[sub_row][sub_col]=mat[j][k];
+        //             sub_col++;
+        //         }
+        //     }
+        //     sub_row++;
+        // }
+        sub_matrix(mat,0,i,sub_mat);
         det+=mat[0][i]*pow(-1,i)*determinant(sub_mat);
     }
     return det;
@@ -238,4 +243,89 @@ void matrix_copy(vector<vector<double>> mat1,vector<vector<double>> &mat2){
             mat2[i][j]=mat1[i][j];
         }
     }
+}
+void sub_matrix(vector<vector<double>> mat,int I,int J,vector<vector<double>> &sub_mat){
+    sub_mat.resize(mat.size()-1,vector<double>(mat.size()-1));
+    int i,j,k,sub_row=0,sub_col;
+    for(i=0;i<mat.size();i++){
+        if(i!=I){
+            sub_col=0;
+            for(j=0;j<mat[i].size();j++){
+                if(j!=J){
+                    sub_mat[sub_row][sub_col++]=mat[i][j];
+                }
+            }
+            sub_row++;
+        }  
+    }
+}
+void inverse_matrix(vector<vector<double>> mat,vector<vector<double>> &in_mat){
+    if(fabs(determinant(mat))<EPS){
+        cout<<"The matrix is not invertible"<<endl;
+        return;
+    }
+    int i,j,k,n=mat.size(),cur,pre;
+    make_identical(in_mat,n);
+    for(i=0;i<n-1;i++){
+        cur=mat[i][i];
+        for(j=i+1;j<n;j++){
+            pre=mat[j][i];
+            for(k=0;k<n;k++){
+                mat[j][k]=-(pre*mat[i][k])+(cur*mat[j][k]);
+                in_mat[j][k]=-(pre*in_mat[i][k])+(cur*in_mat[j][k]);
+                
+            }
+            for(k=0;k<n;k++){
+                mat[j][k]/=cur;
+                in_mat[j][k]/=cur;
+            }
+            
+        }
+        print_aug_matrix(mat,in_mat);
+    }
+    for(i=n-1;i>0;i--){
+        cur=mat[i][i];
+        for(j=i-1;j>=0;j--){
+            pre=mat[j][i];
+            for(k=0;k<n;k++){
+                mat[j][k]=-(pre*mat[i][k])+(cur*mat[j][k]);
+                in_mat[j][k]=-(pre*in_mat[i][k])+(cur*in_mat[j][k]);
+                
+            }
+            for(k=0;k<n;k++){
+                mat[j][k]/=cur;
+                in_mat[j][k]/=cur;
+            }
+        }
+        print_aug_matrix(mat,in_mat);
+    }
+    // for(i=0;i<n;i++){
+    //     cur=mat[i][i];
+    //     for(j=0;j<n;j++){
+    //         mat[i][j]/=cur;
+    //         in_mat[i][j]/=cur;
+    //     }
+    // }
+}
+void print_matrix(vector<vector<double>> mat){
+    for(int i=0;i<mat.size();i++){
+        for(int j=0;j<mat[i].size();j++){
+            cout<<mat[i][j]<<" ";
+        }
+        cout<<endl;
+    }
+}
+void print_aug_matrix(vector<vector<double>> mat,vector<vector<double>> aug_mat){
+    int i,j;
+    for(i=0;i<mat.size();i++){
+        for(j=0;j<mat[i].size();j++){
+            cout<<mat[i][j]<<"\t";
+        }
+        cout<<"|\t";
+        for(j=0;j<aug_mat[i].size();j++){
+            cout<<aug_mat[i][j]<<"\t";
+        }
+        cout<<endl;
+    }
+    cout<<endl;
 }

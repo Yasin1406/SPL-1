@@ -81,5 +81,11 @@ void eigenvalue(vector<vector<double>> A,vector<double> &values){
                 eigen_vector[i][j]/=eigen_vector[eigen_vector.size()-1][j];
             }
         }
+        cout<<"\n"<<endl;
+        // for(i=0;i<eigen_vector.size();i++){
+        //     for(j=0;j<eigen_vector[i].size();j++){
+
+        //     }
+        // }
     }
 }
