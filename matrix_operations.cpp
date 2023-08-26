@@ -9,12 +9,15 @@ double determinant(vector<vector<double>> &mat);
 double max_off_diagonal_value(vector<vector<double>> &mat1,int &inI,int &inJ);
 bool is_diagonal(vector<vector<double>> &mat1);
 double off_diagonal_sq_sum(vector<vector<double>> mat);
-void make_identical(vector<vector<double>> &mat,int size);
+void make_identity(vector<vector<double>> &mat,int size);
 void matrix_copy(vector<vector<double>> mat1,vector<vector<double>> &mat2);
 void sub_matrix(vector<vector<double>> mat,int I,int J,vector<vector<double>> &sub_mat);
 void inverse_matrix(vector<vector<double>> mat,vector<vector<double>> &in_mat);
 void print_matrix(vector<vector<double>> mat);
 void print_aug_matrix(vector<vector<double>> mat,vector<vector<double>> aug_mat);
+double euclidean_norm_col(vector<vector<double>> mat,int col);
+void sigma_matrix(vector<double> eigen_value,vector<vector<double>> &mat,int row,int col);
+void swap_rows(vector<vector<double>> &mat,int I,int J);
 // int main(){
 //     int m1,m2,n1,n2,inI,inJ;
 //     vector<vector<double>> mat1,mat2,mat3;
@@ -43,7 +46,7 @@ void print_aug_matrix(vector<vector<double>> mat,vector<vector<double>> aug_mat)
 //         }
 //         cout<<endl;
 //     }
-//     make_identical(iden,3);
+//     make_identity(iden,3);
 
 //     cout<<endl;
 //     cout<<"Identical:"<<endl;
@@ -220,7 +223,7 @@ double off_diagonal_sq_sum(vector<vector<double>> mat){
     return sq;
 }
 
-void make_identical(vector<vector<double>> &mat,int size){
+void make_identity(vector<vector<double>> &mat,int size){
     mat.resize(size,vector<double>(size));
     int i,j;
     for(i=0;i<size;i++){
@@ -262,7 +265,7 @@ void sub_matrix(vector<vector<double>> mat,int I,int J,vector<vector<double>> &s
 void inverse_matrix(vector<vector<double>> mat,vector<vector<double>> &in_mat){
     int i,j,k,n=mat.size(),cur,pre,p;
     double m;
-    make_identical(in_mat,n);
+    make_identity(in_mat,n);
     for(i=0;i<n-1;i++){
         for(p=i;p<n;p++){
             if(!(fabs(mat[p][i])<EPS)){
@@ -332,7 +335,7 @@ void inverse_matrix(vector<vector<double>> mat,vector<vector<double>> &in_mat){
 void print_matrix(vector<vector<double>> mat){
     for(int i=0;i<mat.size();i++){
         for(int j=0;j<mat[i].size();j++){
-            cout<<mat[i][j]<<" ";
+            printf("%.3lf\t",mat[i][j]);
         }
         cout<<endl;
     }
@@ -350,4 +353,38 @@ void print_aug_matrix(vector<vector<double>> mat,vector<vector<double>> aug_mat)
         cout<<endl;
     }
     cout<<endl;
+}
+double euclidean_norm_col(vector<vector<double>> mat,int col){
+    double norm=0;
+    int i,j;
+    for(i=0;i<mat.size();i++){
+        norm+=mat[i][col]*mat[i][col];
+    }
+    return sqrt(norm);
+}
+void sigma_matrix(vector<double> eigen_value,vector<vector<double>> &mat,int row,int col){
+    int i,j;
+    mat.resize(row,vector<double>(col));
+    for(i=0;i<mat.size();i++){
+        for(j=0;j<mat[i].size();j++){
+            mat[i][j]=0;
+        }
+    }
+    for(i=0;i<mat.size();i++){
+        mat[i][i]=sqrt(eigen_value[i]);
+    }
+}
+void swap_rows(vector<vector<double>> &mat,int I,int J){
+    vector<double> temp;
+    temp.resize(mat[0].size());
+    int i,j;
+    for(i=0;i<mat[I].size();i++){
+        temp[i]=mat[I][i];
+    }
+    for(i=0;i<mat[I].size();i++){
+        mat[I][i]=mat[J][i];
+    }
+    for(i=0;i<mat[I].size();i++){
+        mat[J][i]=temp[i];
+    }
 }

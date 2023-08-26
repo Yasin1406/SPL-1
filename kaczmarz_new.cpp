@@ -54,11 +54,15 @@ double norm_sq(int row){
 }
 void kaczmarz(int k){
     int index=(k-1)%m;
-    double coefficient=(b[index]-inner_product(index,k-1))/norm_sq(index);
+    double coefficient=(b[index]-inner_product(index,k-1))/norm_sq(index),value;
     vector<double> temp;
     int i;
     for(i=0;i<n;i++){
-        temp.push_back(x[k-1][i]+coefficient*A[index][i]);
+        value=x[k-1][i]+coefficient*A[index][i];
+        if(fabs(value)<EPS){
+            value=0;
+        }
+        temp.push_back(value);
     }
     x.push_back(temp);
 }

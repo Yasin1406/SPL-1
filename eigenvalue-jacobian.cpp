@@ -4,22 +4,33 @@
 #define lower 20
 using namespace std;
 int iter;
-void eigenvalue(vector<vector<double>> A,vector<double> &values);
+void eigenvalue(vector<vector<double>> A,vector<double> &eigen_values,vector<vector<double>> &eigen_vector);
+void normalized_eigen_vector(vector<vector<double>> &eigen_vector);
+void inverse_sigma(vector<vector<double>> sigma_mat,vector<vector<double>> &i_sigma_mat);
 vector<vector<double>> eigen_vector;
 int main(){
-    int m,n,i,j;
+    int m,n,i,j,k;
     vector<vector<double>> mat;
+    
     cout<<"Enter number of rows and columns: ";
     cin>>m>>n;
     mat.resize(m,vector<double>(n));
     for(i=0;i<m;i++){
         for(j=0;j<n;j++){
-            mat[i][j]=(rand() %(upper - lower + 1)) + lower;
+            mat[i][j]=rand()%20+rand()%10;
         }
     }
+    cout<<endl;
+    cout<<"Randomly generized matrix:"<<endl;
+    for(i=0;i<mat.size();i++){
+        for(j=0;j<mat[i].size();j++){
+            cout<<mat[i][j]<<" ";
+        }
+        cout<<endl;
+    }
     vector<vector<double>> A,t_mat;
-    vector<double> values;
-    values.resize(n);
+    vector<double> eigen_values;
+    eigen_values.resize(n);
     transpose(mat,t_mat);
     multiplication(t_mat,mat,A);
     cout<<"\nThe symmetric matrix:"<<endl;
@@ -29,25 +40,93 @@ int main(){
         }
         cout<<endl;
     }
-    make_identical(eigen_vector,n);
-    eigenvalue(A,values);
-    cout<<"\n"<<endl;
-    for(i=0;i<values.size();i++){
-        printf("Eigenvectors for eigenvalue %.3lf:\n",values[i]);
-        for(j=0;j<eigen_vector.size();j++){
-            printf("%.3lf ",eigen_vector[j][i]);
+    make_identity(eigen_vector,n);
+    eigenvalue(A,eigen_values,eigen_vector);
+    // for(i=0;i<eigen_values.size();i++){
+    //     printf("Eigenvectors for eigenvalue %.3lf:\n",eigen_values[i]);
+    //     for(j=0;j<eigen_vector.size();j++){
+    //         printf("%.3lf ",eigen_vector[j][i]);
+    //     }
+    //     cout<<"\n"<<endl;
+    // }
+    
+    vector<vector<double>> t_eigen_vector;
+    transpose(eigen_vector,t_eigen_vector);
+    vector<double> sorted_eigen_values;
+    sorted_eigen_values.resize(eigen_values.size());
+    for(i=eigen_values.size()-1;i>=0;i--){
+        for(j=i-1;j>=0;j--){
+            if(eigen_values[i]>eigen_values[j]){
+                double temp;
+                temp=eigen_values[i];
+                eigen_values[i]=eigen_values[j];
+                eigen_values[j]=temp;
+                swap_rows(t_eigen_vector,i,j);
+            }
         }
-        cout<<"\n"<<endl;
     }
+    transpose(t_eigen_vector,eigen_vector);
+    cout<<"\n"<<endl;
+    normalized_eigen_vector(eigen_vector);
+    // for(i=0;i<eigen_values.size();i++){
+    //     printf("Eigenvectors for eigenvalue %.3lf:\n",eigen_values[i]);
+    //     for(j=0;j<eigen_vector.size();j++){
+    //         printf("%.3lf ",eigen_vector[j][i]);
+    //     }
+    //     cout<<"\n"<<endl;
+    // }
+    // cout<<endl;
+  //  cout<<"The sigma matrix:"<<endl;
+    vector<vector<double>> sigma_mat;
+    sigma_mat.resize(m,vector<double>(n));
+    // sigma_matrix(sorted_eigen_values,sigma_mat,m,n);
+    for(i=0;i<m;i++){
+        for(j=0;j<n;j++){
+            if(i==j){
+                sigma_mat[i][j]=sqrt(eigen_values[i]);
+            }
+            else{
+                sigma_mat[i][j]=0;
+            }
+        }
+    }
+  //  print_matrix(sigma_mat);
     cout<<endl;
+    
+ //  cout<<"Right singular matrix:"<<endl;
+   // print_matrix(eigen_vector);
+    vector<vector<double>> i_sigma_mat,temp,left_sing,ans,right_sing,temp1;
+    inverse_sigma(sigma_mat,i_sigma_mat);
+    // cout<<"Inverse of sigma:"<<endl;
+    // print_matrix(i_sigma_mat);
+    multiplication(mat,eigen_vector,temp);
+    multiplication(temp,i_sigma_mat,left_sing);
+    cout<<"\nLeft singular matrix:"<<endl;
+    print_matrix(left_sing);
+    cout<<endl;
+    cout<<"\nSigma matrix:"<<endl;
+    print_matrix(sigma_mat);
+    cout<<endl;
+    cout<<"Right singular matrix:"<<endl;
+    transpose(eigen_vector,right_sing);
+    cout<<endl;
+    print_matrix(right_sing);
+    multiplication(left_sing,sigma_mat,temp1);
+    multiplication(temp1,right_sing,ans);
+    cout<<endl;
+    //print_matrix(temp);
+    cout<<endl;
+
+    cout<<"Answer:"<<endl;
+    print_matrix(ans);
     return 0;
 }
-void eigenvalue(vector<vector<double>> A,vector<double> &values){
+void eigenvalue(vector<vector<double>> A,vector<double> &eigen_values,vector<vector<double>> &eigen_vector){
     int inI,inJ,i,j;
     double theta;
     double max=max_off_diagonal_value(A,inI,inJ);
     vector<vector<double>> S,t_S,A_new,temp,temp_S;
-    make_identical(S,A.size());
+    make_identity(S,A.size());
     if(A[inI][inI]==A[inJ][inJ]){
         theta=0.5*asin(1);
         if(A[inI][inI]<0){
@@ -64,28 +143,47 @@ void eigenvalue(vector<vector<double>> A,vector<double> &values){
     transpose(S,t_S);
     multiplication(t_S,A,temp);
     multiplication(temp,S,A_new);
-    multiplication(eigen_vector,S,temp_S);
+    multiplication(eigen_vector,S,temp_S); /* */
     matrix_copy(temp_S,eigen_vector);
     if(!is_diagonal(A_new)){
-        eigenvalue(A_new,values);
+        eigenvalue(A_new,eigen_values,eigen_vector);
     }
     else{
         for(i=0;i<A_new.size();i++){
             if(fabs(A_new[i][i])<10e-3){
                 A_new[i][i]=0;
             }
-            values[i]=A_new[i][i];
+            eigen_values[i]=A_new[i][i];
         }
         for(j=0;j<eigen_vector.size();j++){
             for(i=0;i<eigen_vector.size();i++){
                 eigen_vector[i][j]/=eigen_vector[eigen_vector.size()-1][j];
             }
         }
-        cout<<"\n"<<endl;
-        // for(i=0;i<eigen_vector.size();i++){
-        //     for(j=0;j<eigen_vector[i].size();j++){
-
-        //     }
-        // }
+        
+    }
+}
+void normalized_eigen_vector(vector<vector<double>> &eigen_vector){
+    int i,j,k;
+    double norm;
+    for(i=0;i<eigen_vector.size();i++){
+        norm=euclidean_norm_col(eigen_vector,i);
+        for(j=0;j<eigen_vector.size();j++){
+            eigen_vector[j][i]/=norm;
+        }
+    }
+}
+void inverse_sigma(vector<vector<double>> sigma_mat,vector<vector<double>> &i_sigma_mat){
+    int i,j;
+    i_sigma_mat.resize(sigma_mat.size(),vector<double>(sigma_mat[0].size()));
+    for(i=0;i<sigma_mat.size();i++){
+        for(j=0;j<sigma_mat[i].size();j++){
+            if(i==j){
+                i_sigma_mat[i][j]=1/sigma_mat[i][j];
+            }
+            else{
+                i_sigma_mat[i][j]=0;
+            }
+        }
     }
 }
