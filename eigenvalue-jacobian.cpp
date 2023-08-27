@@ -76,7 +76,7 @@ int main(){
     //     cout<<"\n"<<endl;
     // }
     // cout<<endl;
-  //  cout<<"The sigma matrix:"<<endl;
+   cout<<"The sigma matrix:"<<endl;
     vector<vector<double>> sigma_mat;
     sigma_mat.resize(m,vector<double>(n));
     // sigma_matrix(sorted_eigen_values,sigma_mat,m,n);
@@ -90,15 +90,15 @@ int main(){
             }
         }
     }
-  //  print_matrix(sigma_mat);
+   print_matrix(sigma_mat);
     cout<<endl;
-    
  //  cout<<"Right singular matrix:"<<endl;
    // print_matrix(eigen_vector);
     vector<vector<double>> i_sigma_mat,temp,left_sing,ans,right_sing,temp1;
     inverse_sigma(sigma_mat,i_sigma_mat);
-    // cout<<"Inverse of sigma:"<<endl;
-    // print_matrix(i_sigma_mat);
+    cout<<endl;
+    cout<<"Inverse of sigma:"<<endl;
+    print_matrix(i_sigma_mat);
     multiplication(mat,eigen_vector,temp);
     multiplication(temp,i_sigma_mat,left_sing);
     cout<<"\nLeft singular matrix:"<<endl;
@@ -116,7 +116,6 @@ int main(){
     cout<<endl;
     //print_matrix(temp);
     cout<<endl;
-
     cout<<"Answer:"<<endl;
     print_matrix(ans);
     return 0;
@@ -175,15 +174,19 @@ void normalized_eigen_vector(vector<vector<double>> &eigen_vector){
 }
 void inverse_sigma(vector<vector<double>> sigma_mat,vector<vector<double>> &i_sigma_mat){
     int i,j;
-    i_sigma_mat.resize(sigma_mat.size(),vector<double>(sigma_mat[0].size()));
-    for(i=0;i<sigma_mat.size();i++){
-        for(j=0;j<sigma_mat[i].size();j++){
-            if(i==j){
-                i_sigma_mat[i][j]=1/sigma_mat[i][j];
-            }
-            else{
-                i_sigma_mat[i][j]=0;
-            }
+    i_sigma_mat.resize(sigma_mat[0].size(),vector<double>(sigma_mat.size()));
+    if(sigma_mat.size()>sigma_mat[0].size()){
+        transpose(sigma_mat,i_sigma_mat);
+        for(i=0;i<i_sigma_mat.size();i++){
+            i_sigma_mat[i][i]=1/i_sigma_mat[i][i];
         }
     }
+    else{
+        for(i=0;i<sigma_mat.size();i++){
+        if(i<sigma_mat.size()){
+            i_sigma_mat[i][i]=1/sigma_mat[i][i];
+        }
+    }
+    }
+    
 }
