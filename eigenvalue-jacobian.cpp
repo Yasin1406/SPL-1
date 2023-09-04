@@ -33,13 +33,13 @@ int main(){
     eigen_values.resize(n);
     transpose(mat,t_mat);
     multiplication(t_mat,mat,A);
-    cout<<"\nThe symmetric matrix:"<<endl;
-    for(i=0;i<A.size();i++){
-        for(j=0;j<A[i].size();j++){
-            cout<<A[i][j]<<" ";
-        }
-        cout<<endl;
-    }
+    // cout<<"\nThe symmetric matrix:"<<endl;
+    // for(i=0;i<A.size();i++){
+    //     for(j=0;j<A[i].size();j++){
+    //         cout<<A[i][j]<<" ";
+    //     }
+    //     cout<<endl;
+    // }
     make_identity(eigen_vector,n);
     eigenvalue(A,eigen_values,eigen_vector);
     // for(i=0;i<eigen_values.size();i++){
@@ -76,7 +76,7 @@ int main(){
     //     cout<<"\n"<<endl;
     // }
     // cout<<endl;
-   cout<<"The sigma matrix:"<<endl;
+  cout<<"The sigma matrix:"<<endl;
     vector<vector<double>> sigma_mat;
     sigma_mat.resize(m,vector<double>(n));
     // sigma_matrix(sorted_eigen_values,sigma_mat,m,n);
@@ -98,7 +98,7 @@ int main(){
     inverse_sigma(sigma_mat,i_sigma_mat);
     cout<<endl;
     cout<<"Inverse of sigma:"<<endl;
-    print_matrix(i_sigma_mat);
+  //  print_matrix(i_sigma_mat);
     multiplication(mat,eigen_vector,temp);
     multiplication(temp,i_sigma_mat,left_sing);
     cout<<"\nLeft singular matrix:"<<endl;
