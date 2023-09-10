@@ -28,13 +28,12 @@ int main(){
         temp.push_back(0);
     }
     x.push_back(temp);
-    for(i=1;i<=2000;i++){
+    for(i=1;i<=1000;i++){
         kaczmarz(i);
-        cout<<"Iter: "<<i<<endl;
-        for(j=0;j<n;j++){
-            cout<<"x["<<j<<"]="<<x[i][j]<<endl;
-        }
-        cout<<endl;
+    }
+    cout<<endl;
+    for(j=0;j<n;j++){
+        printf("X[%d]: %.3lf\n",j,x[i-1][j]);
     }
     
 }

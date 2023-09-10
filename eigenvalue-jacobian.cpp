@@ -76,7 +76,6 @@ int main(){
     //     cout<<"\n"<<endl;
     // }
     // cout<<endl;
-  cout<<"The sigma matrix:"<<endl;
     vector<vector<double>> sigma_mat;
     sigma_mat.resize(m,vector<double>(n));
     // sigma_matrix(sorted_eigen_values,sigma_mat,m,n);
@@ -90,14 +89,11 @@ int main(){
             }
         }
     }
-   print_matrix(sigma_mat);
-    cout<<endl;
  //  cout<<"Right singular matrix:"<<endl;
    // print_matrix(eigen_vector);
     vector<vector<double>> i_sigma_mat,temp,left_sing,ans,right_sing,temp1;
     inverse_sigma(sigma_mat,i_sigma_mat);
     cout<<endl;
-    cout<<"Inverse of sigma:"<<endl;
   //  print_matrix(i_sigma_mat);
     multiplication(mat,eigen_vector,temp);
     multiplication(temp,i_sigma_mat,left_sing);
@@ -109,7 +105,6 @@ int main(){
     cout<<endl;
     cout<<"Right singular matrix:"<<endl;
     transpose(eigen_vector,right_sing);
-    cout<<endl;
     print_matrix(right_sing);
     multiplication(left_sing,sigma_mat,temp1);
     multiplication(temp1,right_sing,ans);
