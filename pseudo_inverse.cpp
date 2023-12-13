@@ -1,5 +1,5 @@
 #include<bits/stdc++.h>
-#include "matrix_operations.cpp"
+#include "matrix.cpp"
 using namespace std;
 
 void calculate_pseudo_inverse(vector<vector<double>> mat,vector<vector<double>> &inverse_mat);

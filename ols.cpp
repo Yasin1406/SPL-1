@@ -1,6 +1,6 @@
 #include<bits/stdc++.h>
 // #include "matrix_operations.cpp"
-#include "pseudo_inverse.cpp"
+#include "matrix.cpp"
 using namespace std;
 
 vector<vector<double>> X,t_X,mul_X,inverse_mul_X,mul,ans;
@@ -38,7 +38,14 @@ int main(){
     print_matrix(mul_X);
     cout<<endl;
     
-    // inverse_matrix(mul_X,inverse_mul_X);
+    double det;
+    det=determinant(mul_X);
+    // if(fabs(det)<EPS){
+    //     calculate_pseudo_inverse(mul_X,inverse_mul_X);
+    // }
+    // else{
+    //     inverse_matrix(mul_X,inverse_mul_X);
+    // }
     calculate_pseudo_inverse(mul_X,inverse_mul_X);
     cout<<"(X^t*X)^-1:"<<endl;
     print_matrix(inverse_mul_X);

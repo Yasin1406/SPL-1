@@ -1,10 +1,6 @@
-#ifndef MATRIX_OPERATIONS_CPP
-#define MATRIX_OPERATIONS_CPP
-// #include "pseudo_inverse.cpp"
 #include<bits/stdc++.h>
 using namespace std;
 #define EPS 10e-6
-
 void addition(vector<vector<double>> &mat1,vector<vector<double>> &mat2,vector<vector<double>> &mat3);
 void subtraction(vector<vector<double>> &mat1,vector<vector<double>> &mat2,vector<vector<double>> &mat3);
 void transpose(vector<vector<double>> &mat1,vector<vector<double>> &mat2);
@@ -16,7 +12,7 @@ double off_diagonal_sq_sum(vector<vector<double>> mat);
 void make_identity(vector<vector<double>> &mat,int size);
 void matrix_copy(vector<vector<double>> mat1,vector<vector<double>> &mat2);
 void sub_matrix(vector<vector<double>> mat,int I,int J,vector<vector<double>> &sub_mat);
-void inverse_matrix(vector<vector<double>> org_mat,vector<vector<double>> &inverse_mat);
+void inverse_matrix(vector<vector<double>> mat,vector<vector<double>> &in_mat);
 void print_matrix(vector<vector<double>> mat);
 void print_aug_matrix(vector<vector<double>> mat,vector<vector<double>> aug_mat);
 double euclidean_norm_col(vector<vector<double>> mat,int col);
@@ -135,15 +131,41 @@ void subtraction(vector<vector<double>> &mat1,vector<vector<double>> &mat2,vecto
 }
 void transpose(vector<vector<double>> &mat1,vector<vector<double>> &mat2){
     mat2.clear();
+    int row=mat1.size();
+    int col=mat1[0].size();
+    int i,j;
     vector<double> temp;
-    for(int i=0;i<mat1[0].size();i++){
-        for(int j=0;j<mat1.size();j++){
+    for(i=0;i<col;i++){
+        for(j=0;j<row;j++){
             temp.push_back(mat1[j][i]);
         }
         mat2.push_back(temp);
         temp.clear();
     }
 }
+
+// void multiplication(vector<vector<double>> &mat1,vector<vector<double>> &mat2,vector<vector<double>> &mat3){
+//     int i,j,k;
+//     if(mat1[0].size()!=mat2.size()){
+//         cout<<"Dimension doesn't match for multiplication!"<<endl;
+//         return;
+//     }
+//     mat3.resize(mat1.size(),vector<double> (mat2[0].size()));
+//     for(i=0;i<mat1.size();i++){
+//         for(j=0;j<mat2[0].size();j++){
+//             for(k=0;k<mat2.size();k++){
+//                 mat3[i][j]+=mat1[i][k]*mat2[k][j];
+//             }
+//         }
+//     }
+//     for(i=0;i<mat3.size();i++){
+//         for(j=0;j<mat3.size();j++){
+//             if(fabs(mat3[i][j])<EPS){
+//                 mat3[i][j]=0;
+//             }
+//         }
+//     }
+// }
 
 void multiplication(vector<vector<double>> &mat1,vector<vector<double>> &mat2,vector<vector<double>> &mat3){
     int i,j,k;
@@ -251,6 +273,7 @@ double off_diagonal_sq_sum(vector<vector<double>> mat){
 }
 
 void make_identity(vector<vector<double>> &mat,int size){
+    mat.clear();
     vector<double> temp;
     int i,j;
     for(i=0;i<size;i++){
@@ -268,6 +291,7 @@ void make_identity(vector<vector<double>> &mat,int size){
 }
 
 void matrix_copy(vector<vector<double>> mat1,vector<vector<double>> &mat2){
+    mat2.clear();
     vector<double> temp;
     int i,j;
     for(i=0;i<mat1.size();i++){
@@ -293,9 +317,7 @@ void sub_matrix(vector<vector<double>> mat,int I,int J,vector<vector<double>> &s
         }  
     }
 }
-void inverse_matrix(vector<vector<double>> org_mat,vector<vector<double>> &inverse_mat){
-    vector<vector<double>> mat,in_mat;
-    matrix_copy(org_mat,mat);
+void inverse_matrix(vector<vector<double>> mat,vector<vector<double>> &in_mat){
     int i,j,k,n=mat.size(),cur,pre,p;
     double m;
     make_identity(in_mat,n);
@@ -306,7 +328,7 @@ void inverse_matrix(vector<vector<double>> org_mat,vector<vector<double>> &inver
             }
         }
         if(p==n){
-            // calculate_pseudo_inverse(org_mat,inverse_mat);
+            // calculate_pseudo_inverse(org_mat,org_in_mat);
             return;
         }
         if(fabs(mat[i][i])<EPS){
@@ -323,8 +345,8 @@ void inverse_matrix(vector<vector<double>> org_mat,vector<vector<double>> &inver
             // for(j=0;j<n;j++){
             //     in_mat[p][j]=in_temp[j];
             // }
-            swap_rows(mat,p,n);
-            swap_rows(in_mat,p,n);
+            swap_rows(mat,i,p);
+            swap_rows(in_mat,i,p);
         }
         for(j=i+1;j<n;j++){
             m=mat[j][i]/mat[i][i];
@@ -341,7 +363,7 @@ void inverse_matrix(vector<vector<double>> org_mat,vector<vector<double>> &inver
         }
     }
     if(fabs(mat[n-1][n-1])<EPS){
-        // calculate_pseudo_inverse(org_mat,inverse_mat);
+        // calculate_pseudo_inverse(org_mat,org_in_mat);
         return;
     }
     for(i=n-1;i>0;i--){
@@ -366,7 +388,6 @@ void inverse_matrix(vector<vector<double>> org_mat,vector<vector<double>> &inver
             in_mat[i][j]/=m;
         }
     }
-    matrix_copy(in_mat,inverse_mat);
 }
 void print_matrix(vector<vector<double>> mat){
     for(int i=0;i<mat.size();i++){
@@ -401,6 +422,7 @@ double euclidean_norm_col(vector<vector<double>> mat,int col){
 void sigma_matrix(vector<double> eigen_value,vector<vector<double>> &mat,int row,int col){
     int i,j;
     vector<double> temp;
+    mat.clear();
     // mat.resize(row,vector<double>(col));
     for(i=0;i<row;i++){
         for(j=0;j<col;j++){
@@ -413,6 +435,21 @@ void sigma_matrix(vector<double> eigen_value,vector<vector<double>> &mat,int row
         mat[i][i]=sqrt(eigen_value[i]);
     }
 }
+// void swap_rows(vector<vector<double>> &mat,int I,int J){
+//     vector<double> temp;
+//     temp.resize(mat[0].size());
+//     int i,j;
+//     for(i=0;i<mat[I].size();i++){
+//         temp[i]=mat[I][i];
+//     }
+//     for(i=0;i<mat[I].size();i++){
+//         mat[I][i]=mat[J][i];
+//     }
+//     for(i=0;i<mat[I].size();i++){
+//         mat[J][i]=temp[i];
+//     }
+// }
+
 void swap_rows(vector<vector<double>> &mat,int I,int J){
     vector<double> temp;
     int i,j;
@@ -466,8 +503,20 @@ void svd(vector<vector<double>> mat,vector<vector<double>> &U_mat,vector<vector<
     vector<vector<double>> t_eigen_vectors;
     transpose(eigen_vectors,t_eigen_vectors);
 
-    vector<double> sorted_eigen_values;
-    sorted_eigen_values.resize(eigen_values.size());
+    // vector<double> sorted_eigen_values;
+    // sorted_eigen_values.resize(eigen_values.size());
+    // for(i=eigen_values.size()-1;i>=0;i--){
+    //     for(j=i-1;j>=0;j--){
+    //         if(eigen_values[i]>eigen_values[j]){
+    //             double temp;
+    //             temp=eigen_values[i];
+    //             eigen_values[i]=eigen_values[j];
+    //             eigen_values[j]=temp;
+    //             swap_rows(t_eigen_vectors,i,j);
+    //         }
+    //     }
+    // }
+    // sorted_eigen_values.resize(eigen_values.size());
     for(i=eigen_values.size()-1;i>=0;i--){
         for(j=i-1;j>=0;j--){
             if(eigen_values[i]>eigen_values[j]){
@@ -482,18 +531,18 @@ void svd(vector<vector<double>> mat,vector<vector<double>> &U_mat,vector<vector<
 
     transpose(t_eigen_vectors,eigen_vectors);
     normalized_eigen_vector(eigen_vectors);
-
-    sigma_mat.resize(n,vector<double>(n));
-    for(i=0;i<n;i++){
-        for(j=0;j<n;j++){
-            if(i==j){
-                sigma_mat[i][j]=sqrt(eigen_values[i]);
-            }
-            else{
-                sigma_mat[i][j]=0;
-            }
-        }
-    }
+    sigma_matrix(eigen_values,sigma_mat,n,n);
+    // sigma_mat.resize(n,vector<double>(n));
+    // for(i=0;i<n;i++){
+    //     for(j=0;j<n;j++){
+    //         if(i==j){
+    //             sigma_mat[i][j]=sqrt(eigen_values[i]);
+    //         }
+    //         else{
+    //             sigma_mat[i][j]=0;
+    //         }
+    //     }
+    // }
 
     vector<vector<double>> i_sigma_mat,temp,temp1;
     inverse_sigma(sigma_mat,i_sigma_mat);
@@ -581,5 +630,3 @@ void inverse_sigma(vector<vector<double>> sigma_mat,vector<vector<double>> &i_si
         }
     }
 }
-
-#endif
