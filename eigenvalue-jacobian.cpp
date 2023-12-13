@@ -1,25 +1,30 @@
 #include<bits/stdc++.h>
 #include "matrix_operations.cpp"
-#define upper 0
-#define lower 20
+#define lb -20
+#define ub 20
 using namespace std;
 int iter;
 void eigenvalue(vector<vector<double>> A,vector<double> &eigen_values,vector<vector<double>> &eigen_vector);
 void normalized_eigen_vector(vector<vector<double>> &eigen_vector);
 void inverse_sigma(vector<vector<double>> sigma_mat,vector<vector<double>> &i_sigma_mat);
+void pseudo_inverse(vector<vector<double>> right_sing,vector<vector<double>> sing,vector<vector<double>> left_sing,vector<vector<double>> &mat);
 vector<vector<double>> eigen_vector;
 int main(){
     int m,n,i,j,k;
-    vector<vector<double>> mat;
-    
+    vector<vector<double>> mat,pseudo_in;
+    srand(time(0));
     cout<<"Enter number of rows and columns: ";
     cin>>m>>n;
     mat.resize(m,vector<double>(n));
     for(i=0;i<m;i++){
         for(j=0;j<n;j++){
-            mat[i][j]=rand()%20+rand()%10;
+            // mat[i][j]=(rand() % (ub - lb + 1)) + lb;
+            cin>>mat[i][j];
         }
     }
+    // mat[0]={1,2,-1};
+    // mat[1]={2,-1,3};
+    // mat[2]={3,1,2};
     cout<<endl;
     cout<<"Randomly generized matrix:"<<endl;
     for(i=0;i<mat.size();i++){
@@ -32,6 +37,9 @@ int main(){
     vector<double> eigen_values;
     eigen_values.resize(n);
     transpose(mat,t_mat);
+    cout<<endl;
+    cout<<"Transpose:"<<endl;
+    print_matrix(t_mat);
     multiplication(t_mat,mat,A);
     // cout<<"\nThe symmetric matrix:"<<endl;
     // for(i=0;i<A.size();i++){
@@ -66,7 +74,9 @@ int main(){
         }
     }
     transpose(t_eigen_vector,eigen_vector);
-    cout<<"\n"<<endl;
+    cout<<endl;
+    // cout<<"Orthogonal Matirx:\n";
+    // print_matrix(A);
     normalized_eigen_vector(eigen_vector);
     // for(i=0;i<eigen_values.size();i++){
     //     printf("Eigenvectors for eigenvalue %.3lf:\n",eigen_values[i]);
@@ -93,26 +103,31 @@ int main(){
    // print_matrix(eigen_vector);
     vector<vector<double>> i_sigma_mat,temp,left_sing,ans,right_sing,temp1;
     inverse_sigma(sigma_mat,i_sigma_mat);
-    cout<<endl;
+    // cout<<endl;
   //  print_matrix(i_sigma_mat);
     multiplication(mat,eigen_vector,temp);
     multiplication(temp,i_sigma_mat,left_sing);
-    cout<<"\nLeft singular matrix:"<<endl;
-    print_matrix(left_sing);
-    cout<<endl;
-    cout<<"\nSigma matrix:"<<endl;
-    print_matrix(sigma_mat);
-    cout<<endl;
-    cout<<"Right singular matrix:"<<endl;
+    // cout<<"\nLeft singular matrix:"<<endl;
+    // print_matrix(left_sing);
+    // cout<<endl;
+    // cout<<"\nSigma matrix:"<<endl;
+    // print_matrix(sigma_mat);
+    // cout<<endl;
+    // cout<<"Right singular matrix:"<<endl;
     transpose(eigen_vector,right_sing);
-    print_matrix(right_sing);
+    // print_matrix(right_sing);
     multiplication(left_sing,sigma_mat,temp1);
     multiplication(temp1,right_sing,ans);
-    cout<<endl;
+    // cout<<endl;
     //print_matrix(temp);
-    cout<<endl;
-    cout<<"Answer:"<<endl;
-    print_matrix(ans);
+    // cout<<endl;
+    // cout<<"Answer:"<<endl;
+    // print_matrix(ans);
+    pseudo_inverse(right_sing,sigma_mat,left_sing,pseudo_in);
+    // cout<<endl;
+    cout<<"Pseudo Inverse:"<<endl;
+    print_matrix(pseudo_in);
+
     return 0;
 }
 void eigenvalue(vector<vector<double>> A,vector<double> &eigen_values,vector<vector<double>> &eigen_vector){
@@ -178,10 +193,21 @@ void inverse_sigma(vector<vector<double>> sigma_mat,vector<vector<double>> &i_si
     }
     else{
         for(i=0;i<sigma_mat.size();i++){
-        if(i<sigma_mat.size()){
-            i_sigma_mat[i][i]=1/sigma_mat[i][i];
+            if(i<sigma_mat.size()){
+                i_sigma_mat[i][i]=1/sigma_mat[i][i];
+            }
         }
     }
+}
+
+void pseudo_inverse(vector<vector<double>> right_sing,vector<vector<double>> sing,vector<vector<double>> left_sing,vector<vector<double>> &mat){
+    vector<vector<double>> in_sing,t_left_sing,temp,t_right_sing;
+    for(int i=0;i<sing.size()&&i<sing[i].size();i++){
+        sing[i][i]=1/sing[i][i];
     }
-    
+    transpose(right_sing,t_right_sing);
+    transpose(sing,in_sing);
+    transpose(left_sing,t_left_sing);
+    multiplication(t_right_sing,in_sing,temp);
+    multiplication(temp,t_left_sing,mat);
 }

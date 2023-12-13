@@ -52,7 +52,7 @@ void eigenvalue(vector<vector<double>> A,vector<double> &values){
     // printf("Maximum off diagonal value: %.3f\n",max);
     // cout<<"Indices: "<<inI<<","<<inJ<<endl;
     vector<vector<double>> S,t_S,A_new,temp;
-    make_identical(S,A.size());
+    make_identity(S,A.size());
     if(A[inI][inI]==A[inJ][inJ]){
         theta=0.5*asin(1);
         if(A[inI][inI]<0){

@@ -6,7 +6,7 @@ void subtraction(vector<vector<double>> &mat1,vector<vector<double>> &mat2,vecto
 void transpose(vector<vector<double>> &mat1,vector<vector<double>> &mat2);
 void multiplication(vector<vector<double>> &mat1,vector<vector<double>> &mat2,vector<vector<double>> &mat3);
 double determinant(vector<vector<double>> &mat);
-double max_off_diagonal_value(vector<vector<double>> &mat1,int &inI,int &inJ);
+double max_off_diagonal_value(vector<vector<double>> mat1,int &inI,int &inJ);
 bool is_diagonal(vector<vector<double>> &mat1);
 double off_diagonal_sq_sum(vector<vector<double>> mat);
 void make_identity(vector<vector<double>> &mat,int size);
@@ -178,7 +178,7 @@ double determinant(vector<vector<double>> &mat){
     return det;
 }
 
-double max_off_diagonal_value(vector<vector<double>> &mat1,int &inI,int &inJ){
+double max_off_diagonal_value(vector<vector<double>> mat1,int &inI,int &inJ){
     int i,j;
     double max=0;
     inI=0;

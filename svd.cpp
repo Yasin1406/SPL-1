@@ -1,63 +1,90 @@
 #include<bits/stdc++.h>
-// #include "matrix_operations.cpp"
-#include "eigenvalue-jacobian.cpp"
+#include "matrix_operations.cpp"
 using namespace std;
 #define upper 20
 #define lower -20
-vector<vector<double>> eigen_vector;
-vector<double> eigen_value;
+void calculate_eigenvalues(vector<vector<double>> A,vector<vector<double>> &eigen_values,vector<vector<double>> &eigen_vectors);
+void normalized_eigen_vector(vector<vector<double>> &eigen_vectors);
+void inverse_sigma(vector<vector<double>> sigma,vector<vector<double>> &t_sigma);
 int main(){
-    int m,n,i,j;
+    srand(time(0));
+    int i,j,m,n;
     cout<<"Enter number of rows and columns: ";
     cin>>m>>n;
-    vector<vector<double>> matA,t_matA,mat;
-    matA.resize(m,vector<double>(n));
-    // cout<<"Enter the matrix:"<<endl;
-    // for(i=0;i<m;i++){
-    //     for(j=0;j<n;j++){
-    //         cin>>matA[i][j];
-    //     }
-    // }
-    cout<<"The matrix:"<<endl;
-    for(i=0;i<matA.size();i++){
-        for(j=0;j<matA[i].size();j++){
-            matA[i][j]=(rand()%(upper-lower+1))+lower;
-            cout<<matA[i][j]<<" ";
+    vector<vector<double>> mat;
+    mat.resize(m,vector<double>(n));
+    for(i=0;i<m;i++){
+        for(j=0;j<n;j++){
+            mat[i][j]=(rand()%(upper-lower+1))+lower;
         }
-        cout<<endl;
     }
-    transpose(matA,t_matA);
-  //  cout<<"Transposed successfully"<<endl;
-    multiplication(t_matA,matA,mat);
-   // cout<<"Multiplied successfully"<<endl;
-    eigen_value.resize(mat.size());
-    eigen_vector.resize(mat.size(),vector<double>(mat.size()));
-    eigenvalue(mat,eigen_value,eigen_vector);
+    cout<<"Randomly generated matrix:"<<endl;
+    print_matrix(mat);
+    vector<vector<double>> t_mat,A,eigen_vectors;
+    vector<double> eigen_values;
+    transpose(mat,t_mat);
+    if(m>=n){
+        multiplication(t_mat,mat,A);
+        make_identity(eigen_vectors,n);
 
-    vector<vector<double>> sigma;
-    make_identity(sigma,eigen_vector.size());
-    for(i=0;i<sigma.size();i++){
-        sigma[i][i]=sqrt(eigen_value[i]);
     }
-    cout<<endl;
-    cout<<"Eigenvalues:"<<endl;
-    for(i=0;i<eigen_value.size();i++){
-        printf("%.3lf\t",eigen_value[i]);
-    }
-    cout<<endl;
-    for(i=0;i<eigen_vector.size();i++){
-        for(j=0;j<eigen_vector[i].size();j++){
-            printf("%.3lf\t",eigen_vector[i][j]);
-        }
-        cout<<endl;
-    }
-    cout<<endl;
-    cout<<"The Sigma matrix:"<<endl;
-    for(i=0;i<sigma.size();i++){
-        for(j=0;j<sigma[i].size();j++){
-            printf("%.3lf\t",sigma[i][j]);
-        }
-        cout<<endl;
-    }
+    
     return 0;
+}
+void calculate_eigenvalues(vector<vector<double>> A,vector<vector<double>> &eigen_values,vector<vector<double>> &eigen_vectors){
+    int inI,inJ,i,j;
+    double theta;
+    double max=max_off_diagonal_value(A,inI,inJ);
+    vector<vector<double>> rotation,t_rotation;
+    make_identity(rotation,A.size());
+    if(A[inI][inI]==A[inJ][inJ]){
+        if(A[inI][inJ]>0){
+            theta=0.5*asin(1);
+        }
+        else{
+            theta=-0.5*asin(1);
+        }
+    }
+    else{
+        theta=0.5*atan((2*A[inI][inJ])/(A[inI][inI]-A[inJ][inJ]));
+    }
+    rotation[inI][inI]=cos(theta);
+    rotation[inJ][inJ]=cos(theta);
+    rotation[inI][inJ]=-sin(theta);
+    rotation[inJ][inI]=sin(theta);
+    transpose(rotation,t_rotation);
+    vector<vector<double>> temp;
+    multiplication(t_rotation,A,temp);
+    multiplication(temp,rotation,A);
+    temp.clear();
+    multiplication(eigen_vectors,rotation,temp);
+    matrix_copy(temp,eigen_vectors);
+    if(!is_diagonal(A)){
+        calculate_eigenvalues(A,eigen_values,eigen_vectors);
+    }
+    else{
+        for(i=0;i<A.size();i++){
+            if(fabs(A[i][i])<EPS){
+                A[i][i]=0;
+            }
+        }
+        for(j=0;i<eigen_vectors.size();j++){
+            for(i=0;i<eigen_vectors.size();i++){
+                eigen_vectors[i][j]/=eigen_vectors[eigen_vectors.size()-1][j];
+            }
+        }
+    }
+}
+void normalized_eigen_vector(vector<vector<double>> &eigen_vectors){
+    int i,j,k;
+    double norm;
+    for(i=0;i<eigen_vectors.size();i++){
+        norm=euclidean_norm_col(eigen_vectors,i);
+        for(j=0;j<eigen_vectors.size();j++){
+            eigen_vectors[j][i]/=norm;
+        }
+    }
+}
+void inverse_sigma(vector<vector<double>> sigma,vector<vector<double>> &t_sigma){
+    
 }
