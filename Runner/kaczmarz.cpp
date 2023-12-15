@@ -54,7 +54,11 @@ double norm_sq(vector<vector<double>> A,int row)
 void kaczmarz(vector<vector<double>> A,vector<double> b,int k)
 {
     int index=(k-1)%n;
-    double coefficient=(b[index]-inner_product(A,index,k-1))/norm_sq(A,index),value;
+    double coefficient;
+    double dot_prod=inner_product(A,index,k-1);
+    double norm=norm_sq(A,index);
+    double value;
+    coefficient=(b[index]-dot_prod)/norm;
     vector<double> temp;
     int i;
     for(i=0;i<n;i++)

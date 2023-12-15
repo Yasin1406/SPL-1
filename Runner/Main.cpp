@@ -1,7 +1,7 @@
 #include<bits/stdc++.h>
 #include "kaczmarz.cpp"
 #include "ols.cpp"
-#include "outlier_test.cpp"
+#include "test.cpp"
 using namespace std;
 
 int main()
@@ -15,20 +15,20 @@ int main()
     double value;
     vector<double> temp;
     int i,j;
-    int choice;
+    string choice;
     cout<<endl;
     cout<<"Choices:"<<endl;
     cout<<"1. Enter solution process"<<endl;
     cout<<"2. Quit"<<endl<<endl;
     cout<<"Enter your choice: ";
     cin>>choice;
-    while(choice!=1&&choice!=2)
+    while(choice!="1"&&choice!="2")
     {
         cout<<endl<<"Invalid choice!"<<endl<<endl;
         cout<<"Please enter your choice again: ";
         cin>>choice;
     }
-    while(choice!=2)
+    while(choice!="2")
     {
         mat.clear();
         cons.clear();
@@ -67,8 +67,8 @@ int main()
             printf("%.3lf\n",s);
         }
         cout<<endl<<endl;
-        detect_outlier(kaczmarz_solution,ols_solution,outliers);
-        if(outliers.size()>0)
+        // detect_outlier(kaczmarz_solution,ols_solution,outliers);
+        if(difference_check(kaczmarz_solution,ols_solution)==true||check_validity(ols_solution))
         {
             cout<<"There is 'significant differences' between the solutions of Kaczmarz method and OLS method ";
             cout<<"when using "<<iter<<" iterations"<<endl;
@@ -83,7 +83,7 @@ int main()
         cout<<"Enter 1 for yes. For no enter anything else."<<endl;
         cout<<endl<<"Enter your choice: ";
         cin>>choice;
-        while(choice==1)
+        while(choice=="1")
         {
             cout<<endl<<"Enter number of iterations for kaczmarz operation: ";
             cin>>iter;
@@ -101,8 +101,8 @@ int main()
                 printf("%.3lf\n",s);
             }
             cout<<endl<<endl;
-            detect_outlier(kaczmarz_solution,ols_solution,outliers);
-            if(outliers.size()>0)
+            // detect_outlier(kaczmarz_solution,ols_solution,outliers);
+            if(difference_check(kaczmarz_solution,ols_solution)==true||check_validity(ols_solution))
             {
                 cout<<"There is 'significant differences' between the solutions of Kaczmarz method and OLS method ";
                 cout<<"when using "<<iter<<" iterations"<<endl;
@@ -123,7 +123,7 @@ int main()
         cout<<"2. Quit"<<endl<<endl;
         cout<<endl<<"Enter your choice: ";
         cin>>choice;
-        while(choice!=1&&choice!=2)
+        while(choice!="1"&&choice!="2")
         {
             cout<<"Invalid choice!"<<endl;
             cout<<endl<<"Please enter your choice again: ";

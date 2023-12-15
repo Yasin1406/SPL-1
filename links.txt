@@ -1,13 +1,31 @@
 Eigenvalues and Eigenvectors:
+
 https://youtu.be/1wjXVdwzgX8
+
 https://youtu.be/GICp5jmoIg0
+
 https://www.youtube.com/watch?v=YfTrNElThDs
 
+
 Kaczmarz Mehtod:
+
 https://youtu.be/SclGSdwB7M4
 
+
 Jacobi Method for Eigenvalues:
+
 https://youtu.be/6R1kVlIrtZE
 
+
 Inverse of a Matrix:
+
 https://www.youtube.com/watch?v=rnyLW2-lL7o
+
+
+Coordinate Descent:
+
+https://www.youtube.com/watch?v=TiiF3VG_ViU
+
+https://www.adeveloperdiary.com/data-science/machine-learning/introduction-to-coordinate-descent-using-least-squares-regression/#:~:text=In%20Coordinate%20Descent%20we%20minimize,fixed%20and%20then%20vice%2Dversa
+
+
