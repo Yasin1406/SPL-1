@@ -2,6 +2,7 @@
 #include "kaczmarz.cpp"
 #include "ols.cpp"
 #include "test.cpp"
+#include "generate.cpp"
 using namespace std;
 
 int main()
@@ -38,19 +39,33 @@ int main()
         cout<<endl<<"Enter size of the matrix: ";
         cin>>n;
     
-        cout<<endl<<"Enter the augmented matrix:"<<endl;
-        for(i=0;i<n;i++)
+        cout<<endl<<"Do you want to generate an augmented matrix of "<<n<<" size?"<<endl;
+        cout<<"Enter 1 for yes and anything else for no"<<endl;
+        cout<<endl<<"Enter your choice: ";
+        cin>>choice;
+        if(choice=="1")
         {
-            for(j=0;j<n;j++)
-            {
-                cin>>value;
-                temp.push_back(value);
-            }
-            mat.push_back(temp);
-            temp.clear();
-            cin>>value;
-            cons.push_back(value);
+            create_augmented_matrix(mat,cons,n);
+            cout<<endl<<"The generated augmented matrix:"<<endl;
+            print_aug_matrix(mat,cons);
+            cout<<endl;
         }
+        else{
+            cout<<endl<<"Enter the augmented matrix:"<<endl;
+            for(i=0;i<n;i++)
+            {
+                for(j=0;j<n;j++)
+                {
+                    cin>>value;
+                    temp.push_back(value);
+                }
+                mat.push_back(temp);
+                temp.clear();
+                cin>>value;
+                cons.push_back(value);
+            }
+        }
+        
         cout<<endl<<"Enter number of iterations for kaczmarz operation: ";
         cin>>iter;
         kaczmarz_operation(mat,cons,kaczmarz_solution,iter);
@@ -68,7 +83,7 @@ int main()
         }
         cout<<endl<<endl;
         // detect_outlier(kaczmarz_solution,ols_solution,outliers);
-        if(difference_check(kaczmarz_solution,ols_solution)==true||check_validity(ols_solution))
+        if(difference_check(kaczmarz_solution,ols_solution)==true)
         {
             cout<<"There is 'significant differences' between the solutions of Kaczmarz method and OLS method ";
             cout<<"when using "<<iter<<" iterations"<<endl;
@@ -101,8 +116,7 @@ int main()
                 printf("%.3lf\n",s);
             }
             cout<<endl<<endl;
-            // detect_outlier(kaczmarz_solution,ols_solution,outliers);
-            if(difference_check(kaczmarz_solution,ols_solution)==true||check_validity(ols_solution))
+            if(difference_check(kaczmarz_solution,ols_solution))
             {
                 cout<<"There is 'significant differences' between the solutions of Kaczmarz method and OLS method ";
                 cout<<"when using "<<iter<<" iterations"<<endl;

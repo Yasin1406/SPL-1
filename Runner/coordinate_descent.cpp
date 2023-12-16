@@ -13,7 +13,9 @@ int main()
     vector<vector<double>> X;
     vector<double> y,w;
     int n,i,j;
+    cout<<"Enter size of the matrix: ";
     cin>>n;
+    cout<<"Enter the augmented matrix:"<<endl;
     vector<double> row;
     double value;
     for(i=0;i<n;i++)

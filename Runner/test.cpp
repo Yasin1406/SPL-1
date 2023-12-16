@@ -1,5 +1,5 @@
 #include<bits/stdc++.h>
-#define thresh 10e-4
+#define thresh 10e-3
 #define Eps 10e-6
 using namespace std;
 

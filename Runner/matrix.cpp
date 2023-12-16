@@ -15,7 +15,7 @@ void matrix_copy(vector<vector<double>> mat1,vector<vector<double>> &mat2);
 void sub_matrix(vector<vector<double>> mat,int I,int J,vector<vector<double>> &sub_mat);
 void inverse_matrix(vector<vector<double>> mat,vector<vector<double>> &in_mat);
 void print_matrix(vector<vector<double>> mat);
-void print_aug_matrix(vector<vector<double>> mat,vector<vector<double>> aug_mat);
+void print_aug_matrix(vector<vector<double>> mat,vector<double> b);
 double euclidean_norm_col(vector<vector<double>> mat,int col);
 void sigma_matrix(vector<double> eigen_value,vector<vector<double>> &mat,int row,int col);
 void swap_rows(vector<vector<double>> &mat,int I,int J);
@@ -344,20 +344,16 @@ void print_matrix(vector<vector<double>> mat)
     }
 }
 
-void print_aug_matrix(vector<vector<double>> mat,vector<vector<double>> aug_mat)
+void print_aug_matrix(vector<vector<double>> mat,vector<double> b)
 {
     int i,j;
     for(i=0;i<mat.size();i++)
     {
         for(j=0;j<mat[i].size();j++)
         {
-            printf("%10.3lf\t",mat[i][j]);
+            printf("%10.3lf",mat[i][j]);
         }
-        cout<<"| ";
-        for(j=0;j<aug_mat[i].size();j++)
-        {
-            printf("%10.3lf\t",aug_mat[i][j]);
-        }
+        printf("%10.3lf",b[i]);
         cout<<endl;
     }
     cout<<endl;
