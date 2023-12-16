@@ -11,7 +11,7 @@ int main()
     vector<double> cons;
     vector<double> kaczmarz_solution,ols_solution;
     vector<double> outliers;
-    int n;
+    int m,n;
     int iter;
     double value;
     vector<double> temp;
@@ -37,22 +37,26 @@ int main()
         kaczmarz_solution.clear();
         ols_solution.clear();
         cout<<endl<<"Enter size of the matrix: ";
-        cin>>n;
-    
+        cin>>m>>n;
+        if(m<n)
+        {
+            cout<<endl<<"Please give a normal system or an over determined system"<<endl;
+            continue;
+        }
         cout<<endl<<"Do you want to generate an augmented matrix of "<<n<<" size?"<<endl;
         cout<<"Enter 1 for yes and anything else for no"<<endl;
         cout<<endl<<"Enter your choice: ";
         cin>>choice;
         if(choice=="1")
         {
-            create_augmented_matrix(mat,cons,n);
+            create_augmented_matrix(mat,cons,m,n);
             cout<<endl<<"The generated augmented matrix:"<<endl;
             print_aug_matrix(mat,cons);
             cout<<endl;
         }
         else{
             cout<<endl<<"Enter the augmented matrix:"<<endl;
-            for(i=0;i<n;i++)
+            for(i=0;i<m;i++)
             {
                 for(j=0;j<n;j++)
                 {

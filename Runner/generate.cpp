@@ -1,6 +1,6 @@
 #include<bits/stdc++.h>
 using namespace std;
-void create_augmented_matrix(vector<vector<double>> &A,vector<double> &b,int n)
+void create_augmented_matrix(vector<vector<double>> &A,vector<double> &b,int m,int n)
 {
     A.clear();
     b.clear();    
@@ -10,7 +10,7 @@ void create_augmented_matrix(vector<vector<double>> &A,vector<double> &b,int n)
     int i,j;
     vector<double> temp;
     double value;
-    for(i=0;i<n;i++)
+    for(i=0;i<m;i++)
     {
         for(j=0;j<n;j++)
         {
